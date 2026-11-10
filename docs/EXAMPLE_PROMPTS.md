@@ -1,8 +1,10 @@
 # Example Prompts
 
+[简体中文](./EXAMPLE_PROMPTS.zh-CN.md) | English
+
 Here are some examples of how to prompt an LLM to use the telnet tools effectively:
 
-**NOTE**: Some prompt smay include passwords. Do not include login credentials while working with a non-local LLM (Anthropic Claude, Google Gemini, OpenAI, etc.)
+**Security note:** Never include passwords or other credentials in prompts to cloud-hosted LLMs. If authentication is required, enter credentials yourself through a secure out-of-band channel.
 
 ## Connecting to a MUD and Exploring
 
