@@ -1,5 +1,7 @@
 # MCP-Telnet Tools Reference
 
+[简体中文](./TOOLS.zh-CN.md) | English
+
 MCP-Telnet provides a comprehensive set of tools for interacting with telnet services. This document provides detailed information about each available tool.
 
 ## Identity Management

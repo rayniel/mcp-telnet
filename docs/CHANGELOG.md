@@ -1,5 +1,7 @@
 # Changelog
 
+[简体中文](./CHANGELOG.zh-CN.md) | English
+
 ## 0.5.0 (Current)
 - Added `waitFor` parameter to `send_command` for pattern-based response waiting
   - Polls the response buffer for a regex match instead of using fixed delays
