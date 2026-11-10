@@ -46,9 +46,9 @@ get_llm_identity
 
 ```text
 connect_telnet，参数：{
-  "host": "mud.example.com",
+  "host": "monitor.example.net",
   "port": 4000,
-  "saveName": "my-mud"
+  "saveName": "monitoring-device"
 }
 ```
 
@@ -56,10 +56,10 @@ connect_telnet，参数：{
 
 ```text
 connect_telnet，参数：{
-  "host": "chatmud.example.com",
+  "host": "service.example.net",
   "port": 7443,
   "tls": true,
-  "saveName": "ChatMUD-secure"
+  "saveName": "secure-service"
 }
 ```
 
@@ -67,7 +67,7 @@ connect_telnet，参数：{
 
 ```text
 connect_telnet，参数：{
-  "name": "my-mud"
+  "name": "monitoring-device"
 }
 ```
 
@@ -125,7 +125,7 @@ list_saved_connections
 
 ```text
 send_command，参数：{
-  "command": "look",
+  "command": "status",
   "timeout": 30000,
   "waitAfter": 3
 }
@@ -135,24 +135,23 @@ send_command，参数：{
 
 ```text
 send_command，参数：{
-  "command": "look",
-  "waitFor": "You can go"
+  "command": "status",
+  "waitFor": "Status:|>"
 }
 ```
 
 更多 `waitFor` 模式示例：
 
 ```text
-send_command，参数：{ "command": "MAP POI", "waitFor": "Enter your selection" }
-send_command，参数：{ "command": "WALK Town Square", "waitFor": "You've arrived" }
-send_command，参数：{ "command": "CREDITS", "waitFor": "credits" }
-send_command，参数：{ "command": "SALVAGE", "waitFor": "begin scanning|No debris" }
+send_command，参数：{ "command": "show interfaces", "waitFor": "Interface|Port|>" }
+send_command，参数：{ "command": "show alerts", "waitFor": "Alert|No alerts|>" }
+send_command，参数：{ "command": "status", "waitFor": "Status:|>" }
 ```
 
 参数：
 
 - `command`：要发送的命令（必需）
-- `timeout`：超时时间，单位为毫秒（默认 `30000`）
+- `timeout`：超时时间，单位为毫秒（普通模式默认 `30000`；`waitFor` 模式默认 `2000`）
 - `waitAfter`：发送命令后等待的秒数（默认 `0`；设置 `waitFor` 后忽略）
 - `waitFor`：要在响应缓冲区中等待匹配的正则表达式（可选，不区分大小写）。设置后，匹配成功即返回，不再等待固定时长。如果超时前未匹配到模式，仍会返回已收集的缓冲区内容，并提示未匹配到该模式。
 
@@ -189,9 +188,9 @@ wait，参数：{
 ```text
 sequence_commands，参数：{
   "commands": [
-    { "command": "north", "waitAfter": 2 },
-    { "command": "look", "waitAfter": 1 },
-    { "command": "get treasure", "waitAfter": 0 }
+    { "command": "show interfaces status", "waitAfter": 2 },
+    { "command": "show alerts", "waitAfter": 1 },
+    { "command": "show version", "waitAfter": 0 }
   ],
   "timeout": 60000
 }
@@ -202,9 +201,9 @@ sequence_commands，参数：{
 ```text
 sequence_commands，参数：{
   "commands": [
-    { "command": "BUY 14", "waitFor": "Enter your selection" },
-    { "command": "5", "waitFor": "Continue with purchase" },
-    { "command": "yes", "waitFor": "credits" }
+    { "command": "status", "waitFor": "Status:|>" },
+    { "command": "show interfaces status", "waitFor": "Interface|Port|>" },
+    { "command": "show alerts", "waitFor": "Alert|No alerts|>" }
   ]
 }
 ```
@@ -214,9 +213,9 @@ sequence_commands，参数：{
 ```text
 sequence_commands，参数：{
   "commands": [
-    { "command": "north", "waitFor": "You can go" },
-    { "command": "look", "waitAfter": 1 },
-    { "command": "get treasure", "waitFor": "You pick up" }
+    { "command": "status", "waitFor": "Status:|>" },
+    { "command": "show interfaces status", "waitAfter": 1 },
+    { "command": "show alerts", "waitFor": "Alert|No alerts|>" }
   ]
 }
 ```
@@ -227,7 +226,7 @@ sequence_commands，参数：{
   - `command`：要发送的命令（必需）
   - `waitAfter`：发送该命令后等待的秒数（默认 `1`；设置 `waitFor` 后忽略）
   - `waitFor`：继续发送下一条命令前要匹配的正则表达式（可选，优先于 `waitAfter`）
-- `timeout`：所有命令的默认超时时间，单位为毫秒（默认 `30000`）
+- `timeout`：未设置 `waitFor` 的命令的默认超时时间，单位为毫秒（默认 `30000`）。设置了 `waitFor` 的命令，超时时间取此值与 `2000` 毫秒中的较小值。
 
 ## 日志与记忆
 
@@ -237,7 +236,7 @@ sequence_commands，参数：{
 
 ```text
 get_session_logs，参数：{
-  "connectionName": "my-mud",
+  "connectionName": "monitoring-device",
   "startDate": "2023-01-01T00:00:00Z",
   "endDate": "2023-01-31T23:59:59Z",
   "sessionId": "a1b2c3d4-e5f6-g7h8-i9j0"
@@ -257,8 +256,8 @@ get_session_logs，参数：{
 
 ```text
 update_connection_memory，参数：{
-  "connectionName": "my-mud",
-  "memory": "市场广场在主门以北"
+  "connectionName": "monitoring-device",
+  "memory": "设备维护窗口为周日 02:00"
 }
 ```
 
@@ -273,7 +272,7 @@ update_connection_memory，参数：{
 
 ```text
 get_connection_memory，参数：{
-  "connectionName": "my-mud"
+  "connectionName": "monitoring-device"
 }
 ```
 
@@ -307,7 +306,7 @@ get_connection_memory，参数：{
 
 ### MTTS 协议说明
 
-连接协商期间，MCP-Telnet 使用 MTTS（Mud Terminal Type Standard，MUD 终端类型标准）发送以下信息：
+连接协商期间，MCP-Telnet 使用 MTTS（终端类型标识扩展）发送以下信息：
 
 ```text
 MTTS 1 MCP-Telnet/[VERSION] [CLIENT_NAME]/[CLIENT_VERSION] ([PROVIDER]) 13
