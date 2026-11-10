@@ -8,7 +8,7 @@
 
 MCP-Telnet 是一个 [MCP](https://modelcontextprotocol.io/) 服务器，可与基于 Telnet 的服务交互。它负责处理 Telnet 通信的复杂细节，便于将 LLM 接入以下服务和场景：
 
-- MUD 等基于 Telnet 的交互式服务
+- 网络设备、旧式系统及其他基于文本的服务
 - 旧式系统和网络设备管理
 - 邮件服务器及其他文本交互界面
 - 较早期的网络协议与系统
@@ -48,17 +48,17 @@ MCP-Telnet 是一个 [MCP](https://modelcontextprotocol.io/) 服务器，可与�
 
 1. 请求 Claude 连接到你有权访问的 Telnet 服务：
    ```
-   连接到 mud.example.com 的 4000 端口，以访客身份帮我查看服务内容。
+   连接到我有权访问的 monitor.example.net:2323，读取欢迎信息并告诉我服务端提示了什么；如果需要登录，请暂停并让我自行输入凭据。
    ```
 
 2. 用自然语言发送命令：
    ```
-   查看当前页面，并总结其中可能值得留意的内容。
+   读取服务端当前响应，总结设备状态和需要关注的告警。
    ```
 
 3. 使用更高级的功能：
    ```
-   请在此连接的记忆中保存：“魔法商店位于城镇广场以西。”
+   请在此连接的记忆中保存：“维护窗口为每周日 02:00；执行变更前需确认。”
    ```
 
 更多用法示例请参阅[提示词示例](./EXAMPLE_PROMPTS.zh-CN.md)。
@@ -69,25 +69,25 @@ MCP-Telnet 提供多种用于管理 Telnet 连接的工具，以下是最常用�
 
 - **连接管理**：
   ```
-  connect_telnet，参数：{ "host": "mud.example.com", "port": 4000 }
+  connect_telnet，参数：{ "host": "monitor.example.net", "port": 2323 }
   ```
 
 - **发送命令并按模式等待响应**：
   ```
-  send_command，参数：{ "command": "look", "waitFor": "You can go" }
+  send_command，参数：{ "command": "status", "waitFor": "Status:|>" }
   ```
 
 - **发送命令并等待固定时长**：
   ```
-  send_command，参数：{ "command": "look", "waitAfter": 2 }
+  send_command，参数：{ "command": "show alerts", "waitAfter": 2 }
   ```
 
 - **按顺序发送多条命令**：
   ```
   sequence_commands，参数：{
     "commands": [
-      { "command": "north", "waitFor": "You can go" },
-      { "command": "look", "waitAfter": 0 }
+      { "command": "show interfaces status", "waitFor": "Interface|Port|>" },
+      { "command": "show alerts", "waitAfter": 2 }
     ]
   }
   ```
@@ -96,7 +96,7 @@ MCP-Telnet 提供多种用于管理 Telnet 连接的工具，以下是最常用�
 
 ## 命令间隔与防止过快发送
 
-MUD 服务和其他 Telnet 服务通常需要时间处理命令。合理设置间隔有助于避免触发服务器为防止命令过载而设置的限制，也能避免 LLM 过于频繁地向服务及其他用户发送命令。
+网络设备、旧式系统及其他 Telnet 服务通常需要时间处理命令。合理设置间隔有助于避免触发服务器的频率限制，也能避免 LLM 过于频繁地向服务发送命令。
 
 MCP-Telnet 支持以下等待方式：
 
@@ -106,7 +106,7 @@ MCP-Telnet 支持以下等待方式：
 4. **默认间隔**：为所有命令设置统一的默认等待时间。
 5. **手动等待**：在操作之间显式暂停。
 
-合理设置间隔有助于避免服务器限流、因发送过快而断开连接、触发检测异常快速输入的反机器人机制，以及因命令过于频繁而影响服务器性能。许多 MUD 和其他服务都有限制连续快速命令的保护机制；适当控制发送间隔有助于维持稳定连接。请遵守目标服务的使用规则。
+合理设置间隔有助于避免服务器限流、因发送过快而断开连接，以及因命令过于频繁而影响服务性能。请遵守目标服务的使用规则。
 
 ## 连续模式
 
@@ -123,7 +123,7 @@ connection_status，参数：{ "toggleContinuousMode": true }
 - 明确提示服务端何时完成响应
 - 提示何时可以继续输入，让交互更直观
 
-这并不是持久化的服务端会话；Telnet 响应仍然是分段返回的。连续模式让逐条发送命令的交互更接近直接使用 Telnet 的连续体验，适用于 MUD 服务、互动小说和较长时间的故障排查。
+这并不是持久化的服务端会话；Telnet 响应仍然是分段返回的。连续模式让逐条发送命令的交互更接近直接使用 Telnet 的连续体验，适用于交互式终端操作和较长时间的故障排查。
 
 可随时关闭连续模式：
 
