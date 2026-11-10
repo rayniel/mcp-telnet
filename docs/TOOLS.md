@@ -148,7 +148,7 @@ send_command with: { "command": "SALVAGE", "waitFor": "begin scanning|No debris"
 
 Parameters:
 - `command`: The command to send (required)
-- `timeout`: Timeout in milliseconds (defaults to 30000)
+- `timeout`: Timeout in milliseconds (defaults to 30000 in default mode and 2000 in `waitFor` mode)
 - `waitAfter`: Seconds to wait after sending the command (defaults to 0, ignored if `waitFor` is set)
 - `waitFor`: Regex pattern to wait for in the response buffer (optional, case-insensitive). When set, the command returns as soon as the pattern is matched instead of waiting a fixed delay. If the pattern is not matched before the timeout, the accumulated buffer is returned anyway with a note that the pattern was not matched.
 
@@ -221,7 +221,7 @@ Parameters:
   - `command`: The command to send (required)
   - `waitAfter`: Seconds to wait after this command (defaults to 1, ignored if `waitFor` is set)
   - `waitFor`: Regex pattern to wait for before proceeding to the next command (optional, overrides `waitAfter`)
-- `timeout`: Default timeout in milliseconds for all commands (defaults to 30000)
+- `timeout`: Default timeout in milliseconds for commands without `waitFor` (defaults to 30000). Commands with `waitFor` use the smaller of this timeout and 2000 milliseconds.
 
 ## Logging and Memory
 
