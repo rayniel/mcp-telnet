@@ -29,20 +29,45 @@ MCP-Telnet 是一个 [MCP](https://modelcontextprotocol.io/) 服务器，可与�
 
 ## 安装与快速开始
 
-使用 Claude Desktop 是最简单的方式。在 `claude-desktop-config.json` 中添加以下配置：
+### 在 Copilot CLI 中使用本地克隆版本
+
+需要 Node.js 20 或更高版本、Git，以及已安装的 [Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli)。
+
+先克隆并构建服务：
+
+```bash
+git clone https://github.com/rayniel/mcp-telnet.git
+cd mcp-telnet
+npm install
+npm run build
+```
+
+在仓库目录中，将本地服务注册到 Copilot CLI：
+
+```bash
+copilot mcp add telnet -- node "$(pwd)/dist/index.js"
+copilot mcp list
+copilot
+```
+
+进入 Copilot CLI 后，输入 `/mcp` 查看服务状态。Copilot 会按需启动 MCP 服务，无需另开终端手动运行。注册信息使用仓库的绝对路径，因此请勿移动或删除该目录。连接 Telnet 服务前，先调用 `set_llm_identity` 工具设置 LLM 身份。
+
+### 其他 MCP 客户端
+
+如果不想在本地克隆，也可以让 MCP 客户端（例如 Claude Desktop）从 GitHub 下载并启动服务。在客户端的 MCP 配置中添加：
 
 ```json
 {
   "mcpServers": {
     "telnet": {
       "command": "npx",
-      "args": ["-y", "github:distantorigin/mcp-telnet"]
+      "args": ["-y", "github:rayniel/mcp-telnet"]
     }
   }
 }
 ```
 
-无需单独安装；Claude Desktop 会在需要时自动启动该服务。
+客户端会在需要时自动下载并启动服务。
 
 ### 基本用法
 
@@ -155,4 +180,4 @@ MCP-Telnet 默认将配置保存在用户主目录下：
 
 ## 贡献
 
-MCP-Telnet 最初是一个原型项目，作者日常使用较少，因此作为个人副项目维护，主要由生成式 AI 辅助编写。维护节奏可能不固定；作者也可能因对生成式 AI 伦理问题的看法而随时下架项目。作者会尽力回应并处理问题和拉取请求，但不作保证。
+本仓库由 rayniel 维护，基于上游项目 [distantorigin/mcp-telnet](https://github.com/distantorigin/mcp-telnet)。欢迎提交问题和拉取请求；维护节奏可能有所不同。

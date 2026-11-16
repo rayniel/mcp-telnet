@@ -29,20 +29,45 @@ MCP-Telnet provides numerous capabilities to make telnet access seamless:
 
 ## Installation & Quick Start
 
-The easiest way to use MCP-Telnet is with Claude Desktop. Add this to your `claude-desktop-config.json`:
+### Copilot CLI (local checkout)
+
+Requirements: Node.js 20 or later, Git, and [Copilot CLI](https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli).
+
+Clone and build the server:
+
+```bash
+git clone https://github.com/rayniel/mcp-telnet.git
+cd mcp-telnet
+npm install
+npm run build
+```
+
+From the repository directory, register the local server with Copilot CLI:
+
+```bash
+copilot mcp add telnet -- node "$(pwd)/dist/index.js"
+copilot mcp list
+copilot
+```
+
+In Copilot CLI, use `/mcp` to check the server status. Copilot starts the server when needed; you do not need to run it separately. The registration uses the repository's absolute path, so keep the checkout in place. Before connecting to a Telnet service, set the LLM identity with the `set_llm_identity` tool.
+
+### Other MCP clients
+
+To run MCP-Telnet from GitHub without a local checkout, add this configuration to your MCP client's server configuration (for example, Claude Desktop):
 
 ```json
 {
   "mcpServers": {
     "telnet": {
       "command": "npx",
-      "args": ["-y", "github:distantorigin/mcp-telnet"]
+      "args": ["-y", "github:rayniel/mcp-telnet"]
     }
   }
 }
 ```
 
-No separate installation is needed - Claude Desktop will automatically run it as required.
+The client will download and start the server as needed.
 
 ### Basic Usage
 
@@ -158,4 +183,4 @@ Environment variables can override default settings:
 
 ## Contributing
 
-MCP-Telnet was designed as a prototype and I have very little use for it in my day-to-day. As such, this is a side project, and is primarily AIGC. Thus, maintenance may be erratic and, depending on my current mood towards the ethical quandaries of generative AI, may be taken down at any time. I will make an effort to respond to and address all issues and pull requests, but there are no guarantees.
+This repository is maintained by rayniel and is based on the upstream [distantorigin/mcp-telnet](https://github.com/distantorigin/mcp-telnet) project. Issues and pull requests are welcome; maintenance cadence may vary.
